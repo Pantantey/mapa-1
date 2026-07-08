@@ -112,27 +112,32 @@ export default function useMapTransform({
           t1.clientY - t2.clientY
         );
 
-        const { dist: startDist, zoomAtStart, panXAtStart, panYAtStart } = pinchRef.current;
+        const { dist: startDist, zoomAtStart } = pinchRef.current;
         const scale = dist / startDist;
-        const newZoom = Math.min(
-          maxZoom,
-          Math.max(minZoom, zoomAtStart * scale)
-        );
 
-        // Aplicar zoom centrado en el centro del pinch actual
-        setZoom(newZoom);
-        setPanX(cx - (cx - panXAtStart) * (newZoom / zoomAtStart));
-        setPanY(cy - (cy - panYAtStart) * (newZoom / zoomAtStart));
+        // Usar functional updates para evitar usar valores desactualizados
+        // cuando el clamping (en Mapa.jsx) corrige panX/panY durante el gesto.
+        setZoom((prevZoom) => {
+          const newZoom = Math.min(
+            maxZoom,
+            Math.max(minZoom, zoomAtStart * scale)
+          );
+          setPanX((prevPanX) => cx - (cx - prevPanX) * (newZoom / prevZoom));
+          setPanY((prevPanY) => cy - (cy - prevPanY) * (newZoom / prevZoom));
+          return newZoom;
+        });
       } else if (touches.length === 1 && panRef.current) {
         const t = touches[0];
         // Convertir a coordenadas relativas al contenedor
         const cx = t.clientX - rect.left;
         const cy = t.clientY - rect.top;
-        const { startX, startY, panXAtStart, panYAtStart } = panRef.current;
+        const { startX, startY } = panRef.current;
         const dx = cx - startX;
         const dy = cy - startY;
-        setPanX(panXAtStart + dx);
-        setPanY(panYAtStart + dy);
+        // Usar functional updates para evitar usar valores desactualizados
+        // si el clamping corrigió panX/panY durante el arrastre.
+        setPanX((prevPanX) => prevPanX + dx);
+        setPanY((prevPanY) => prevPanY + dy);
       }
     },
     [minZoom, maxZoom]

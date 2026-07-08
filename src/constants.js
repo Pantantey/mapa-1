@@ -33,3 +33,14 @@ export const MAP_IMAGE = {
  * Ajusta este valor si quieres más o menos puntos en tus rutas.
  */
 export const MIN_DISTANCE = 0.00005;
+
+/**
+ * Factor de altura en modo vertical (portrait).
+ * 1.0 = misma altura que landscape,
+ * 1.5 = 50% más alto (ocupa más espacio vertical),
+ * 2.0 = el doble de alto.
+ *
+ * Ajusta este valor para controlar cuánto se estira el mapa
+ * hacia abajo cuando el teléfono está en vertical.
+ */
+export const VERTICAL_HEIGHT_FACTOR = 1.5;

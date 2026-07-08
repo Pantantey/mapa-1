@@ -83,6 +83,17 @@
   }
 }
 
+/* En vertical (portrait), el contenedor se estira verticalmente
+   según la variable --vertical-height-factor (definida en App.jsx).
+   El aspect-ratio base se reduce dividiendo el alto entre el factor,
+   logrando que el mapa ocupe más espacio hacia abajo. */
+@media (orientation: portrait) {
+  .mapa-contenedor {
+    aspect-ratio: 1057 / calc(597 / var(--vertical-height-factor, 1.5));
+    max-height: 90vh;
+  }
+}
+
 /* Contenedor interno que se transforma con zoom/pan */
 .mapa-inner {
   position: absolute;

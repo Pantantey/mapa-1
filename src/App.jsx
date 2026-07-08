@@ -2,6 +2,7 @@ import { useRef } from "react";
 import useGeolocation from "./hooks/useGeolocation";
 import useRouteRecorder from "./hooks/useRouteRecorder";
 import Mapa from "./components/Mapa";
+import { VERTICAL_HEIGHT_FACTOR } from "./constants";
 import "./App.css";
 
 function App() {
@@ -22,7 +23,10 @@ function App() {
   };
 
   return (
-    <div className="app">
+    <div
+      className="app"
+      style={{ "--vertical-height-factor": VERTICAL_HEIGHT_FACTOR }}
+    >
       <h1 className="app-titulo">Mapa Prototipo</h1>
 
       {loading && <p className="app-mensaje">Obteniendo ubicación...</p>}
