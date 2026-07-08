@@ -54,4 +54,4 @@ export const VERTICAL_HEIGHT_FACTOR = 0.454;
  * Ajusta este valor si sientes que el mapa se mueve muy lento
  * o muy rápido al arrastrarlo.
  */
-export const PAN_SPEED_FACTOR = 1.0;
+export const PAN_SPEED_FACTOR = 1.5;
