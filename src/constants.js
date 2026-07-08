@@ -44,3 +44,14 @@ export const MIN_DISTANCE = 0.00005;
  * hacia abajo cuando el teléfono está en vertical.
  */
 export const VERTICAL_HEIGHT_FACTOR = 0.454;
+
+/**
+ * Factor de velocidad al arrastrar (pan) el mapa con el dedo.
+ * 1.0 = velocidad normal,
+ * 1.5 = 50% más rápido,
+ * 2.0 = el doble de rápido.
+ *
+ * Ajusta este valor si sientes que el mapa se mueve muy lento
+ * o muy rápido al arrastrarlo.
+ */
+export const PAN_SPEED_FACTOR = 1.0;

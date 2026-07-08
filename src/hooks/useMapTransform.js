@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { PAN_SPEED_FACTOR } from "../constants";
 
 /**
  * Hook para manejar zoom (pinch/rueda) y pan (arrastrar) en el mapa.
@@ -132,15 +133,27 @@ export default function useMapTransform({
         const cx = t.clientX - rect.left;
         const cy = t.clientY - rect.top;
         const { startX, startY, panXAtStart, panYAtStart } = panRef.current;
-        const dx = cx - startX;
-        const dy = cy - startY;
-        // Dividir por zoom para que la sensibilidad sea consistente
-        // independientemente del nivel de zoom (a más zoom, menos sensibilidad).
-        // Usamos panXAtStart (no prevPanX) porque dx es el desplazamiento total
-        // desde el inicio del gesto, no incremental.
+        // Delta INCREMENTAL desde el último touchMove (no acumulado desde el inicio).
+        // Esto evita que el clamping bloquee el cambio de dirección:
+        // como actualizamos startX/panXAtStart en cada frame, si el clamping
+        // corrigió el pan, la siguiente iteración parte del valor corregido.
+        const dx = (cx - startX) * PAN_SPEED_FACTOR;
+        const dy = (cy - startY) * PAN_SPEED_FACTOR;
+
         setZoom((prevZoom) => {
-          setPanX(() => panXAtStart + dx / prevZoom);
-          setPanY(() => panYAtStart + dy / prevZoom);
+          const newPanX = panXAtStart + dx / prevZoom;
+          const newPanY = panYAtStart + dy / prevZoom;
+          setPanX(() => newPanX);
+          setPanY(() => newPanY);
+          // Actualizar referencias para el próximo frame: partimos de donde
+          // estamos ahora, no del inicio original del gesto.
+          panRef.current = {
+            ...panRef.current,
+            startX: cx,
+            startY: cy,
+            panXAtStart: newPanX,
+            panYAtStart: newPanY,
+          };
           return prevZoom;
         });
       }
