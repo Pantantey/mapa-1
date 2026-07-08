@@ -131,13 +131,18 @@ export default function useMapTransform({
         // Convertir a coordenadas relativas al contenedor
         const cx = t.clientX - rect.left;
         const cy = t.clientY - rect.top;
-        const { startX, startY } = panRef.current;
+        const { startX, startY, panXAtStart, panYAtStart } = panRef.current;
         const dx = cx - startX;
         const dy = cy - startY;
-        // Usar functional updates para evitar usar valores desactualizados
-        // si el clamping corrigió panX/panY durante el arrastre.
-        setPanX((prevPanX) => prevPanX + dx);
-        setPanY((prevPanY) => prevPanY + dy);
+        // Dividir por zoom para que la sensibilidad sea consistente
+        // independientemente del nivel de zoom (a más zoom, menos sensibilidad).
+        // Usamos panXAtStart (no prevPanX) porque dx es el desplazamiento total
+        // desde el inicio del gesto, no incremental.
+        setZoom((prevZoom) => {
+          setPanX(() => panXAtStart + dx / prevZoom);
+          setPanY(() => panYAtStart + dy / prevZoom);
+          return prevZoom;
+        });
       }
     },
     [minZoom, maxZoom]
