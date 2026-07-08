@@ -43,4 +43,4 @@ export const MIN_DISTANCE = 0.00005;
  * Ajusta este valor para controlar cuánto se estira el mapa
  * hacia abajo cuando el teléfono está en vertical.
  */
-export const VERTICAL_HEIGHT_FACTOR = 1.5;
+export const VERTICAL_HEIGHT_FACTOR = 0.454;
