@@ -144,10 +144,14 @@ const Mapa = forwardRef(function Mapa({ latitude, longitude, routes, currentRout
   // está cortando el movimiento. Corregimos panX/panY para que no
   // acumulen distancia "invisible" que luego hay que deshacer.
   useEffect(() => {
-    if (centerX !== null) {
-      // El mapa es más chico que el viewport, centrado fijo
-      const correctedPanX = centerX - (applyOffset ? initialOffset.x : 0);
-      const correctedPanY = centerY - (applyOffset ? initialOffset.y : 0);
+    if (centerX !== null || centerY !== null) {
+      // El mapa es más chico que el viewport en uno o ambos ejes → centrarlo fijo
+      const correctedPanX = centerX !== null
+        ? centerX - (applyOffset ? initialOffset.x : 0)
+        : panX;
+      const correctedPanY = centerY !== null
+        ? centerY - (applyOffset ? initialOffset.y : 0)
+        : panY;
       if (
         (correctedPanX !== panX || correctedPanY !== panY) &&
         (correctedPanX !== lastCorrectedRef.current.panX || correctedPanY !== lastCorrectedRef.current.panY)
