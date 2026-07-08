@@ -55,3 +55,15 @@ export const VERTICAL_HEIGHT_FACTOR = 0.454;
  * o muy rápido al arrastrarlo.
  */
 export const PAN_SPEED_FACTOR = 1.5;
+
+/**
+ * Compensación del arrastre según el nivel de zoom.
+ * Controla cuánto se reduce la velocidad al hacer zoom.
+ *
+ * - 0.0 = misma velocidad sin importar el zoom (sin compensación)
+ * - 0.5 = punto medio: a zoom 5× se mueve ~2.2× más lento (recomendado)
+ * - 1.0 = comportamiento anterior: a zoom 5× se mueve 5× más lento (muy lento)
+ *
+ * La fórmula usada es: dx / Math.pow(zoom, 1 - PAN_ZOOM_COMPENSATION).
+ */
+export const PAN_ZOOM_COMPENSATION = 0.3;

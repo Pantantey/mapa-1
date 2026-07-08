@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { PAN_SPEED_FACTOR } from "../constants";
+import { PAN_SPEED_FACTOR, PAN_ZOOM_COMPENSATION } from "../constants";
 
 /**
  * Hook para manejar zoom (pinch/rueda) y pan (arrastrar) en el mapa.
@@ -141,8 +141,12 @@ export default function useMapTransform({
         const dy = (cy - startY) * PAN_SPEED_FACTOR;
 
         setZoom((prevZoom) => {
-          const newPanX = panXAtStart + dx / prevZoom;
-          const newPanY = panYAtStart + dy / prevZoom;
+          // Compensar la velocidad según el zoom usando el factor configurable.
+          // Con PAN_ZOOM_COMPENSATION=0 no hay compensación (misma velocidad siempre).
+          // Con PAN_ZOOM_COMPENSATION=1 se divide directamente por el zoom (muy lento a zoom alto).
+          const zoomFactor = Math.pow(prevZoom, 1 - PAN_ZOOM_COMPENSATION);
+          const newPanX = panXAtStart + dx / zoomFactor;
+          const newPanY = panYAtStart + dy / zoomFactor;
           setPanX(() => newPanX);
           setPanY(() => newPanY);
           // Actualizar referencias para el próximo frame: partimos de donde
