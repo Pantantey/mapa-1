@@ -122,9 +122,12 @@ const Mapa = forwardRef(function Mapa({ latitude, longitude, routes, currentRout
     ? (viewportSize.height - mapDisplayHeight) / 2
     : null;
 
-  // Pan visual = pan del usuario + centrado inicial, con clamping o centrado
-  const rawVisualPanX = panX + initialOffset.x;
-  const rawVisualPanY = panY + initialOffset.y;
+  // Pan visual = pan del usuario + centrado inicial (solo cuando zoom=1).
+  // Cuando el usuario hace zoom, initialOffset ya no es válido porque el mapa
+  // es más grande que el viewport y el usuario controla la posición.
+  const applyOffset = zoom === 1;
+  const rawVisualPanX = panX + (applyOffset ? initialOffset.x : 0);
+  const rawVisualPanY = panY + (applyOffset ? initialOffset.y : 0);
 
   const visualPanX = centerX !== null
     ? centerX
@@ -143,8 +146,8 @@ const Mapa = forwardRef(function Mapa({ latitude, longitude, routes, currentRout
   useEffect(() => {
     if (centerX !== null) {
       // El mapa es más chico que el viewport, centrado fijo
-      const correctedPanX = centerX - initialOffset.x;
-      const correctedPanY = centerY - initialOffset.y;
+      const correctedPanX = centerX - (applyOffset ? initialOffset.x : 0);
+      const correctedPanY = centerY - (applyOffset ? initialOffset.y : 0);
       if (
         (correctedPanX !== panX || correctedPanY !== panY) &&
         (correctedPanX !== lastCorrectedRef.current.panX || correctedPanY !== lastCorrectedRef.current.panY)
@@ -159,8 +162,8 @@ const Mapa = forwardRef(function Mapa({ latitude, longitude, routes, currentRout
     const clampedY = rawVisualPanY !== visualPanY;
 
     if (clampedX || clampedY) {
-      const newPanX = clampedX ? visualPanX - initialOffset.x : panX;
-      const newPanY = clampedY ? visualPanY - initialOffset.y : panY;
+      const newPanX = clampedX ? visualPanX - (applyOffset ? initialOffset.x : 0) : panX;
+      const newPanY = clampedY ? visualPanY - (applyOffset ? initialOffset.y : 0) : panY;
       if (
         (newPanX !== panX || newPanY !== panY) &&
         (newPanX !== lastCorrectedRef.current.panX || newPanY !== lastCorrectedRef.current.panY)
