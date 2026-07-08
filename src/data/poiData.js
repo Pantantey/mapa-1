@@ -32,8 +32,8 @@ const poiData = [
   // ==============================
   {
     id: 1,
-    titulo: "Catarata",
-    descripcion: "inicio de senderos",
+    titulo: "Senderos",
+    descripcion: "inicio de los senderos",
     imagen: "arbol_hueco.jpg",
     lat: 10.184036,
     lng: -84.485695,

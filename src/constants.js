@@ -66,4 +66,4 @@ export const PAN_SPEED_FACTOR = 1.5;
  *
  * La fórmula usada es: dx / Math.pow(zoom, 1 - PAN_ZOOM_COMPENSATION).
  */
-export const PAN_ZOOM_COMPENSATION = 0.3;
+export const PAN_ZOOM_COMPENSATION = 0.4;
